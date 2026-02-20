@@ -1,0 +1,103 @@
+import {
+  Box,
+  Text,
+  SimpleGrid,
+  Card,
+  CardBody,
+  Badge,
+  Heading,
+  Divider,
+  VStack,
+  Image
+} from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
+import { useApp } from "../context/AppContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const Results = () => {
+  const { results } = useApp();
+  const navigate = useNavigate();
+
+  // 🔒 Proteção de rota
+  useEffect(() => {
+    if (!results) {
+      navigate("/");
+    }
+  }, [results, navigate]);
+
+  if (!results) return null;
+
+  return (
+    <VStack spacing={10} align="stretch" w="full" maxW="1200px" mx="auto">
+      <Box borderLeft="4px solid" borderColor="teal.300" pl={4}>
+        <Text fontSize="sm" opacity={0.6}>
+          Análise baseada em:
+        </Text>
+        <Text fontSize="xl" fontStyle="italic">
+          "{results.textoAnalisado}"
+        </Text>
+
+        <Text mt={3} opacity={0.8}>
+          {results.analiseEmocional}
+        </Text>
+      </Box>
+
+      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
+        {results.filmes.map((filme, index) => (
+          <Card
+            key={filme.id}
+            bg="whiteAlpha.100"
+            backdropFilter="blur(10px)"
+            border="1px solid"
+            borderColor="whiteAlpha.200"
+            borderRadius="2xl"
+            transition="all 0.3s ease"
+            _hover={{
+              transform: "translateY(-6px)",
+              bg: "whiteAlpha.200"
+            }}
+            animation={`${fadeIn} 0.6s ease-out`}
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <CardBody>
+              <Badge colorScheme="teal" mb={3}>
+                {filme.nota.toFixed(1)} ⭐
+              </Badge>
+
+              <Heading size="md" mb={3}>
+                {filme.titulo}
+              </Heading>
+
+              {filme.poster && (
+                <Image
+                  src={filme.poster}
+                  alt={filme.titulo}
+                  borderRadius="lg"
+                  mb={4}
+                />
+              )}
+
+              <Divider my={3} />
+
+              <Text fontSize="sm" opacity={0.85} mb={3}>
+                {filme.sinopse}
+              </Text>
+
+              <Text fontSize="sm" opacity={0.7}>
+                {filme.motivoRecomendacao}
+              </Text>
+            </CardBody>
+          </Card>
+        ))}
+      </SimpleGrid>
+    </VStack>
+  );
+};
+
+export default Results; 
