@@ -6,6 +6,8 @@ Resolvi criar uma ferramenta que recomenda filmes com base no seu humor, usando 
 CineMood é uma aplicação fullstack que utiliza **Google Gemini (plano gratuito)** para interpretar sentimentos e recomendar filmes, validando os resultados com dados da **TMDB API**.  
 O deploy em produção é feito via **Vercel (Serverless Functions)**.
 
+🌐 **Acesse na web:** [cinemood-ai.vercel.app](https://cinemood-ai.vercel.app)
+
 ---
 
 # 🏗️ Arquitetura
@@ -172,6 +174,4 @@ vercel env add TMDB_API_KEY
 
 ---
 
-# 📄 Licença
-
-MIT
+<p align="center"> Desenvolvido por <a href="https://linkedin.com/me/giovanna-dequi" target="_blank" rel="noopener noreferrer">Giovanna</a>, apaixonada por tecnologia e IA. </p>
