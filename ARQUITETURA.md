@@ -1,69 +1,61 @@
 # 🏗️ Guia de Arquitetura do Backend
 
-## 📐 Princípios Aplicados
+## 📐 Princípios Arquiteturais
 
 ### 1. Separation of Concerns (SoC)
-Cada módulo tem UMA responsabilidade específica.
 
-```
-❌ ERRADO: Tudo em um arquivo
-api/recommend.js → 500 linhas fazendo tudo
+Cada módulo possui responsabilidade bem definida.
 
-✅ CERTO: Separado por responsabilidade  
-api/recommend.js        → Apenas roteamento
-api/services/gemini     → Apenas Gemini
-api/services/tmdb       → Apenas TMDB
-api/utils/validation    → Apenas validações
-```
+Estrutura adotada:
 
-### 2. DRY (Don't Repeat Yourself)
-Código reutilizável em vez de duplicado.
+api/recommend.js        → Orquestração da requisição
+api/services/gemini     → Integração com Gemini
+api/services/tmdb       → Integração com TMDB
+api/utils/validation    → Validação de entrada
+api/utils/response      → Padronização de respostas
 
-```javascript
-❌ ERRADO: Duplicar CORS em cada endpoint
-// recommend.js
-res.setHeader('Access-Control-Allow-Origin', '*');
-// movie.js  
-res.setHeader('Access-Control-Allow-Origin', '*');
+Objetivo:
 
-✅ CERTO: Função reutilizável
-// utils/response.js
-function configurarCORS(res) { ... }
-
-// Usar em todos endpoints
-configurarCORS(res);
-```
-
-### 3. Single Responsibility Principle (SRP)
-Cada classe/função faz UMA coisa.
-
-```javascript
-❌ ERRADO: Serviço faz tudo
-class MovieService {
-  gerarRecomendacoes() { ... }
-  validarFilmes() { ... }
-  formatarResposta() { ... }
-}
-
-✅ CERTO: Um serviço por responsabilidade
-class GeminiService {
-  gerarRecomendacoes() { ... }
-}
-
-class TMDBService {
-  validarFilmes() { ... }
-}
-```
+* Reduzir acoplamento
+* Facilitar manutenção
+* Permitir evolução independente das camadas
 
 ---
 
-## 📂 Estrutura Detalhada
+### 2. DRY (Don't Repeat Yourself)
+
+Comportamentos compartilhados são centralizados.
+
+Exemplo: configuração de CORS e formatação de respostas ficam em `utils/response.js`, evitando repetição nos endpoints.
+
+Benefícios:
+
+* Menos duplicação
+* Menor risco de inconsistência
+* Manutenção simplificada
+
+---
+
+### 3. Single Responsibility Principle (SRP)
+
+Cada serviço executa apenas uma responsabilidade principal.
+
+* `GeminiService` → Geração de recomendações via IA
+* `TMDBService` → Validação e enriquecimento de dados de filmes
+
+Isso evita serviços “god objects” e facilita testes isolados.
+
+---
+
+## 📂 Estrutura do Backend
 
 ### `/api/config/`
-**Responsabilidade:** Configurações centralizadas
+
+Responsável por centralizar configurações e variáveis de ambiente.
+
+Exemplo:
 
 ```javascript
-// index.js
 module.exports = {
   config: {
     gemini: { apiKey, model, temperature },
@@ -74,247 +66,136 @@ module.exports = {
 };
 ```
 
-**Por que separar?**
-- ✅ Mudanças em um lugar só
-- ✅ Fácil de trocar entre dev/prod
-- ✅ Validação centralizada
+Motivação:
+
+* Alterações concentradas em um único ponto
+* Facilidade para alternar ambientes
+* Validação inicial de configuração
 
 ---
 
 ### `/api/services/`
-**Responsabilidade:** Lógica de negócio
+
+Camada de lógica de negócio e integrações externas.
 
 #### `geminiService.js`
-```javascript
-class GeminiService {
-  // Gerar recomendações com IA
-  async gerarRecomendacoes(texto) { }
-  
-  // Construir prompt otimizado
-  _construirPrompt(texto) { }
-  
-  // Verificar se está configurado
-  isConfigured() { }
-}
-```
 
-**Por que um serviço?**
-- ✅ Isola lógica do Gemini
-- ✅ Fácil de testar isoladamente
-- ✅ Pode ser usado em múltiplos endpoints
+Responsabilidades:
+
+* Construção de prompt
+* Chamada à API do Gemini
+* Tratamento da resposta da IA
 
 #### `tmdbService.js`
-```javascript
-class TMDBService {
-  // Buscar filme por título/ano
-  async buscarFilme(titulo, ano) { }
-  
-  // Validar lista de recomendações
-  async validarRecomendacoes(lista) { }
-  
-  // Formatar dados do TMDB
-  _formatarFilme(dados) { }
-}
-```
 
-**Por que separar do Gemini?**
-- ✅ Responsabilidades diferentes
-- ✅ Pode ser usado independentemente
-- ✅ Mais fácil de manter
+Responsabilidades:
+
+* Busca de filmes
+* Validação das recomendações
+* Normalização dos dados retornados
+
+Separar os serviços reduz acoplamento entre provedores externos.
 
 ---
 
 ### `/api/utils/`
-**Responsabilidade:** Funções utilitárias reutilizáveis
+
+Funções reutilizáveis e independentes de domínio.
 
 #### `validation.js`
-```javascript
-// Validar entrada do usuário
-function validarTextoSentimento(texto) { }
 
-// Sanitizar para segurança
-function sanitizarTexto(texto) { }
-```
+* Validação do texto enviado pelo usuário
+* Sanitização básica de entrada
 
 #### `response.js`
-```javascript
-// Padronizar respostas de sucesso
-function respostaSucesso(res, dados) { }
 
-// Padronizar erros
-function erroBadRequest(res, msg) { }
-function erroInterno(res, msg) { }
+* Respostas padronizadas de sucesso
+* Tratamento uniforme de erros
+* Configuração de CORS
 
-// Configurar CORS
-function configurarCORS(res) { }
-```
-
-**Por que utils?**
-- ✅ Evita código duplicado
-- ✅ Consistência nas respostas
-- ✅ Fácil de testar
+Essa padronização garante consistência da API.
 
 ---
 
 ### `/api/recommend.js`
-**Responsabilidade:** Orquestrar o fluxo
 
-```javascript
-module.exports = async (req, res) => {
-  // 1. Configurar CORS
-  configurarCORS(res);
-  
-  // 2. Validar método
-  if (req.method !== 'POST') return erroBadRequest(...);
-  
-  // 3. Validar entrada
-  const validacao = validarTextoSentimento(texto);
-  if (!validacao.valido) return erroBadRequest(...);
-  
-  // 4. Chamar serviço Gemini
-  const { analise, recomendacoes } = await geminiService.gerarRecomendacoes(texto);
-  
-  // 5. Validar com TMDB
-  const filmes = await tmdbService.validarRecomendacoes(recomendacoes);
-  
-  // 6. Retornar resposta padronizada
-  return respostaSucesso(res, { analise, filmes });
-};
-```
+Endpoint responsável por orquestrar o fluxo.
 
-**Por que esse endpoint é tão simples?**
-- ✅ Toda lógica está nos serviços
-- ✅ Fácil de entender o fluxo
-- ✅ Fácil de adicionar features
+Fluxo simplificado:
+
+1. Configurar CORS
+2. Validar método HTTP
+3. Validar entrada
+4. Gerar recomendações via Gemini
+5. Validar filmes via TMDB
+6. Retornar resposta padronizada
+
+O endpoint não contém regra de negócio complexa — apenas coordena serviços.
 
 ---
 
-## 🔄 Fluxo de uma Requisição
+## 🔄 Fluxo de Requisição
 
-```
-1. Cliente → POST /api/recommend
-               ↓
-2. recommend.js → Valida método/CORS
-               ↓
-3. validation.js → Valida entrada
-               ↓
-4. geminiService.js → Gera recomendações
-               ↓
-5. tmdbService.js → Valida filmes
-               ↓
-6. response.js → Formata resposta
-               ↓
-7. Cliente ← JSON padronizado
-```
+Cliente
+↓
+POST /api/recommend
+↓
+Validação de entrada
+↓
+GeminiService → geração de recomendações
+↓
+TMDBService → validação e enriquecimento
+↓
+Resposta padronizada
+↓
+Cliente
 
 ---
 
-## 💡 Vantagens dessa Arquitetura
+## 🎯 Benefícios da Arquitetura
 
-### 1. **Testabilidade**
-```javascript
-// Testar serviço isoladamente
-const gemini = require('./services/geminiService');
-test('deve gerar 3 filmes', async () => {
-  const result = await gemini.gerarRecomendacoes('feliz');
-  expect(result.recomendacoes).toHaveLength(3);
-});
-```
+### Testabilidade
 
-### 2. **Manutenibilidade**
-```javascript
-// Trocar Gemini por outra IA?
-// Só mudar geminiService.js!
+Serviços podem ser testados isoladamente, sem necessidade de executar o endpoint completo.
 
-// Trocar TMDB por IMDB?
-// Só mudar tmdbService.js!
-```
+### Manutenibilidade
 
-### 3. **Reutilização**
-```javascript
-// Usar em outro endpoint
-const { analise } = await geminiService.gerarRecomendacoes(texto);
+Trocar o provedor de IA ou a API de filmes exige alteração apenas na camada de serviço correspondente.
 
-// Usar validação em qualquer lugar
-const valido = validarTextoSentimento(userInput);
-```
+### Reutilização
 
-### 4. **Escalabilidade**
-```javascript
-// Adicionar cache facilmente
-class TMDBService {
-  constructor() {
-    this.cache = new Map();
-  }
-  
-  async buscarFilme(titulo, ano) {
-    const cached = this.cache.get(`${titulo}-${ano}`);
-    if (cached) return cached;
-    // ... buscar e cachear
-  }
-}
-```
+Serviços e validações podem ser reaproveitados em novos endpoints.
+
+### Escalabilidade
+
+A estrutura permite evoluir para:
+
+* Cache (Redis ou memória)
+* Rate limiting
+* Middleware de autenticação
+* Camada de Use Cases
+* Persistência em banco de dados
 
 ---
 
-## 🎯 Quando Usar Cada Padrão
+## 🚀 Evoluções Possíveis
 
-### Use **Services** quando:
-- Lógica complexa de negócio
-- Integrações com APIs externas
-- Operações que serão reutilizadas
+### Middleware
 
-### Use **Utils** quando:
-- Funções auxiliares simples
-- Formatação de dados
-- Validações genéricas
+Separar autenticação e tratamento de requisição em camada própria.
 
-### Use **Config** quando:
-- Variáveis de ambiente
-- Constantes da aplicação
-- Configurações que mudam entre ambientes
+### Repositories
+
+Adicionar abstração para persistência quando houver banco de dados.
+
+### Use Cases
+
+Criar camada intermediária entre endpoint e serviços para aplicar regras de negócio mais complexas.
 
 ---
 
-## 🚀 Próximos Passos (Escalando)
+## 📚 Referências Conceituais
 
-### 1. Adicionar Middleware
-```javascript
-// api/middleware/auth.js
-function requireAuth(req, res, next) {
-  const token = req.headers.authorization;
-  if (!token) return res.status(401).json({ erro: 'Unauthorized' });
-  next();
-}
-```
-
-### 2. Adicionar Repositories (Banco de Dados)
-```javascript
-// api/repositories/userRepository.js
-class UserRepository {
-  async findById(id) { ... }
-  async save(user) { ... }
-}
-```
-
-### 3. Adicionar Use Cases
-```javascript
-// api/useCases/generateRecommendations.js
-class GenerateRecommendationsUseCase {
-  constructor(geminiService, tmdbService) { ... }
-  async execute(texto) { ... }
-}
-```
-
----
-
-## 📚 Leitura Recomendada
-
-- Clean Architecture (Robert C. Martin)
-- Domain-Driven Design (Eric Evans)
-- SOLID Principles
-- Microservices Patterns
-
----
-
-**Dúvidas sobre a arquitetura? Leia este guia novamente! 🏗️**
+* Clean Architecture — Robert C. Martin
+* Domain-Driven Design — Eric Evans
+* Princípios SOLID

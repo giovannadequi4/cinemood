@@ -1,420 +1,175 @@
-# 🎬 CineMatch - Recomendação de Filmes com Gemini AI
+# 🎬 CineMood — Recomendação de Filmes com IA
 
-Sistema fullstack com **arquitetura profissional** que usa **Google Gemini (100% gratuito)** para recomendar filmes e valida com TMDB.
+Aplicação fullstack que utiliza **Google Gemini (plano gratuito)** para interpretar sentimentos e recomendar filmes, validando os resultados com dados da **TMDB API**.
+
+Deploy em produção via **Vercel (Serverless Functions)**.
 
 ---
 
-## 🏗️ Arquitetura do Backend
+# 🏗️ Arquitetura
 
 ```
 api/
 ├── config/
-│   └── index.js              # Configurações centralizadas
+│   └── index.js
 ├── services/
-│   ├── geminiService.js      # Serviço do Gemini AI
-│   └── tmdbService.js        # Serviço do TMDB
+│   ├── geminiService.js
+│   └── tmdbService.js
 ├── utils/
-│   ├── validation.js         # Validações de entrada
-│   └── response.js           # Respostas HTTP padronizadas
-├── recommend.js              # Endpoint principal
-└── movie.js                  # Endpoint de detalhes
+│   ├── validation.js
+│   └── response.js
+├── recommend.js
+└── movie.js
 ```
 
-**Princípios aplicados:**
-- ✅ **Separation of Concerns** - Cada módulo tem uma responsabilidade única
-- ✅ **DRY (Don't Repeat Yourself)** - Código reutilizável
-- ✅ **Single Responsibility** - Serviços focados
-- ✅ **Clean Code** - Código legível e documentado
+### Princípios aplicados
+
+* Separation of Concerns
+* Single Responsibility
+* DRY
+* Padronização de respostas HTTP
+* Configuração centralizada via variáveis de ambiente
 
 ---
 
-## 🌐 PORTAS E URLs
+# 🌐 Desenvolvimento Local
 
-### 🔧 Desenvolvimento Local
+Este projeto utiliza **Vercel Serverless Functions**.
+
+Para rodar localmente corretamente (simulando produção), utilize:
 
 ```bash
-Frontend:  http://localhost:5173
-Backend:   http://localhost:5173/api/*
+vercel dev
 ```
 
-**Importante:** Na Vercel (desenvolvimento local com `npm run dev`), o frontend e backend rodam na **MESMA PORTA** (5173).
+Isso executa:
 
-O Vite faz proxy automático das requisições `/api/*` para as serverless functions.
+* Frontend (Vite)
+* Backend (funções em `/api`)
+* Tudo na mesma origem
 
-### 📊 Como Fazer Requisições
+Por padrão:
 
-**Em desenvolvimento:**
-```javascript
-// ✅ CORRETO - URL relativa
-fetch('/api/recommend', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ texto: "Estou feliz!" })
-});
-
-// ❌ ERRADO - Não especifique porta
-fetch('http://localhost:3000/api/recommend', ...)
+```
+http://localhost:3000
 ```
 
-**Em produção (Vercel):**
-```javascript
-// ✅ CORRETO - Mesma URL relativa funciona
-fetch('/api/recommend', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ texto: "Estou feliz!" })
-});
-```
+As rotas `/api/*` são resolvidas automaticamente pelo Vercel.
+
+> Não é necessário configurar proxy manual no Vite quando usando `vercel dev`.
 
 ---
 
-## 📋 APIs Necessárias (100% GRATUITAS!)
+# 🔑 Variáveis de Ambiente
 
-### 1. Google Gemini API Key
-
-```
-Custo: GRÁTIS ✅
-Limite: 60 requisições/minuto
-```
-
-**Como obter:**
-1. Acesse: https://makersuite.google.com/app/apikey
-2. Clique em "Create API Key"
-3. Cole no `.env` como `GEMINI_API_KEY`
-
-### 2. TMDB API Key
-
-```
-Custo: GRÁTIS ✅
-Limite: Ilimitado para uso pessoal
-```
-
-**Como obter:**
-1. Acesse: https://www.themoviedb.org/
-2. Crie conta gratuita
-3. Settings > API > Request API Key (Developer)
-4. Cole no `.env` como `TMDB_API_KEY`
-
----
-
-## 🚀 Instalação e Uso
-
-### 1. Instalar dependências
+Crie um `.env` baseado em `.env.example`:
 
 ```bash
-cd movie-sentiment-gemini
-npm install
-```
-
-### 2. Configurar variáveis de ambiente
-
-```bash
-# Copiar template
 cp .env.example .env
-
-# Editar .env e adicionar as chaves:
-# GEMINI_API_KEY=...
-# TMDB_API_KEY=...
 ```
 
-### 3. Rodar localmente
+Adicione:
 
-```bash
-npm run dev
 ```
-
-Acesse: **http://localhost:5173**
+GEMINI_API_KEY=
+TMDB_API_KEY=
+```
 
 ---
 
-## 📡 Endpoints da API
+# 📡 Endpoints
 
-### POST /api/recommend
+## POST `/api/recommend`
 
-Gera recomendações baseadas no sentimento.
+Gera recomendações com base no texto enviado.
 
-**Request:**
 ```bash
-curl -X POST http://localhost:5173/api/recommend \
+curl -X POST http://localhost:3000/api/recommend \
   -H "Content-Type: application/json" \
-  -d '{
-    "texto": "Estou me sentindo meio desmotivada e queria algo inspirador"
-  }'
+  -d '{"texto":"Estou desmotivada e queria algo inspirador"}'
 ```
 
-**Response:**
-```json
-{
-  "sucesso": true,
-  "dados": {
-    "textoAnalisado": "Estou me sentindo meio desmotivada...",
-    "analiseEmocional": "Percebo que você está buscando inspiração...",
-    "filmes": [
-      {
-        "id": 550,
-        "titulo": "Clube da Luta",
-        "motivoRecomendacao": "Este filme explora temas de...",
-        "poster": "https://...",
-        "nota": 8.4,
-        "validado": true
-      }
-    ],
-    "filmesValidados": 3,
-    "geradoPorIA": true
-  },
-  "metadata": {
-    "fontes": {
-      "ia": "Google Gemini 1.5 Flash",
-      "validacao": "TMDB (The Movie Database)"
-    },
-    "timestamp": "2025-02-19T..."
-  }
-}
-```
+---
 
-### GET /api/movie?id=550
+## GET `/api/movie?id=550`
 
 Retorna detalhes de um filme específico.
 
-**Request:**
 ```bash
-curl http://localhost:5173/api/movie?id=550
+curl http://localhost:3000/api/movie?id=550
 ```
 
 ---
 
-## 🧪 Testando as APIs
+# ⚙️ Tecnologias
 
-### Teste 1: Recomendação Básica
+### Frontend
 
-```javascript
-const response = await fetch('/api/recommend', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ 
-    texto: "Estou muito feliz hoje!" 
-  })
-});
+* React 18
+* Vite
 
-const data = await response.json();
-console.log(data);
-```
+### Backend
 
-### Teste 2: Detalhes do Filme
+* Node.js (Vercel Serverless Functions)
+* Google Gemini 2.5 Flash
+* TMDB API
+* Axios
 
-```javascript
-const response = await fetch('/api/movie?id=550');
-const data = await response.json();
-console.log(data.dados.filme);
-```
+### Infraestrutura
+
+* Vercel (Deploy + Functions)
+* Vercel CLI (`vercel dev` para ambiente local)
 
 ---
 
-## 📁 Estrutura Completa do Projeto
+# 🚀 Deploy
 
-```
-movie-sentiment-gemini/
-├── api/                           # 🔧 BACKEND
-│   ├── config/
-│   │   └── index.js              # Configurações centralizadas
-│   ├── services/
-│   │   ├── geminiService.js      # Lógica Gemini AI
-│   │   └── tmdbService.js        # Lógica TMDB
-│   ├── utils/
-│   │   ├── validation.js         # Validações
-│   │   └── response.js           # Respostas HTTP
-│   ├── recommend.js              # POST /api/recommend
-│   └── movie.js                  # GET /api/movie
-│
-├── src/                           # ⚛️ FRONTEND
-│   ├── App.jsx                   # Componente principal
-│   ├── App.css
-│   ├── main.jsx
-│   └── index.css
-│
-├── index.html
-├── package.json
-├── vite.config.js                # Config do Vite + Proxy
-├── vercel.json                   # Config Vercel
-├── .env.example                  # Template variáveis
-├── .gitignore
-└── README.md
-```
-
----
-
-## 🔧 Tecnologias
-
-**Frontend:**
-- React 18
-- Vite 5
-- CSS Vanilla
-
-**Backend:**
-- Node.js (Serverless Functions)
-- Google Gemini 1.5 Flash (IA Gratuita)
-- TMDB API (Validação de filmes)
-- Axios (HTTP Client)
-
-**Infraestrutura:**
-- Vercel (Hosting + Serverless)
-
----
-
-## 🌐 Deploy na Vercel
-
-### Método 1: CLI
+## Via CLI
 
 ```bash
-# Instalar Vercel CLI
-npm i -g vercel
-
-# Login
-vercel login
-
-# Deploy
 vercel
+```
 
-# Adicionar variáveis de ambiente
+Configure as variáveis:
+
+```bash
 vercel env add GEMINI_API_KEY
 vercel env add TMDB_API_KEY
 ```
 
-### Método 2: GitHub
+## Via GitHub
 
-1. Push para GitHub
-2. Importar no Vercel Dashboard
-3. Adicionar variáveis de ambiente:
-   - `GEMINI_API_KEY`
-   - `TMDB_API_KEY`
-4. Deploy automático!
+1. Push do projeto
+2. Importar no Vercel
+3. Configurar variáveis no dashboard
+4. Deploy automático a cada push
 
 ---
 
-## 🐛 Troubleshooting
+# 📊 Limites das APIs (Plano Gratuito)
 
-### Erro: "GEMINI_API_KEY não configurada"
-
-```bash
-# Verificar se o .env existe
-ls -la .env
-
-# Se não existir
-cp .env.example .env
-# Editar e adicionar as chaves
-```
-
-### Erro: "fetch failed" ou "ECONNREFUSED"
-
-```bash
-# Certifique-se de usar URL relativa
-# ✅ CORRETO
-fetch('/api/recommend', ...)
-
-# ❌ ERRADO
-fetch('http://localhost:3000/api/recommend', ...)
-```
-
-### Erro 429: "Quota exceeded" (Gemini)
-
-```
-Solução: Aguarde 1 minuto
-Limite: 60 requisições/minuto (grátis)
-```
-
-### Backend não responde
-
-```bash
-# 1. Verificar se está rodando
-npm run dev
-
-# 2. Verificar porta
-# Frontend e API na mesma porta: 5173
-
-# 3. Testar endpoint diretamente
-curl http://localhost:5173/api/recommend \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"texto":"teste"}'
-```
+| API    | Limite                          |
+| ------ | ------------------------------- |
+| Gemini | 60 req/min                      |
+| TMDB   | Uso gratuito para desenvolvedor |
 
 ---
 
-## 📊 Limites das APIs Gratuitas
+# 🧠 Decisões Arquiteturais
 
-| API | Limite Grátis | Custo Extra |
-|-----|---------------|-------------|
-| **Gemini** | 60 req/min | Pago após upgrade |
-| **TMDB** | Ilimitado | Sempre grátis |
+* Serviços isolados para cada API externa
+* Camada de validação antes de chamar IA
+* Padronização de respostas
+* Backend desacoplado do frontend
+* Estrutura preparada para evoluir com:
 
----
-
-## 💡 Boas Práticas Implementadas
-
-### 1. **Configuração Centralizada**
-```javascript
-// api/config/index.js
-const config = {
-  gemini: { apiKey: process.env.GEMINI_API_KEY },
-  tmdb: { apiKey: process.env.TMDB_API_KEY }
-};
-```
-
-### 2. **Serviços Isolados**
-```javascript
-// Cada serviço cuida de uma API
-geminiService.gerarRecomendacoes(texto);
-tmdbService.validarRecomendacoes(filmes);
-```
-
-### 3. **Validação de Dados**
-```javascript
-// api/utils/validation.js
-validarTextoSentimento(texto);
-sanitizarTexto(texto);
-```
-
-### 4. **Respostas Padronizadas**
-```javascript
-// api/utils/response.js
-respostaSucesso(res, dados);
-erroBadRequest(res, mensagem);
-```
+  * Testes automatizados
+  * Cache
+  * Rate limiting
+  * Observabilidade
 
 ---
 
-## 📚 Documentação Adicional
+# 📄 Licença
 
-- [Google Gemini API Docs](https://ai.google.dev/docs)
-- [TMDB API Docs](https://developers.themoviedb.org/3)
-- [Vercel Serverless Functions](https://vercel.com/docs/functions)
-- [Vite Proxy Configuration](https://vitejs.dev/config/server-options.html#server-proxy)
-
----
-
-## 🎓 Aprenda Mais
-
-### Por que essa arquitetura?
-
-1. **Serviços separados** = fácil de testar
-2. **Config centralizada** = fácil de modificar
-3. **Utils reutilizáveis** = menos código duplicado
-4. **Respostas padronizadas** = API consistente
-
-### Próximos passos para melhorar:
-
-- [ ] Adicionar testes unitários (Jest)
-- [ ] Implementar cache (Redis)
-- [ ] Adicionar rate limiting
-- [ ] Logging estruturado (Winston)
-- [ ] Monitoramento (Sentry)
-
----
-
-## 📄 Licença
-
-MIT - Use como quiser!
-
----
-
-**Feito com ❤️ usando Gemini AI (100% gratuito!)** 🚀
+MIT

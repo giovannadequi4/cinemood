@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
       geradoPorIA: true
     }, {
       fontes: {
-        ia: 'Google Gemini 1.5 Flash',
+        ia: 'Google Gemini 2.5 Flash',
         validacao: 'TMDB (The Movie Database)'
       }
     });
