@@ -9,13 +9,7 @@ const LandingPage = () => {
   };
 
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      minH="80vh"
-      p={6}
-    >
+    
       <VStack spacing={6} textAlign="center" maxW="600px">
         <Heading as="h1" size="2xl">
           🎬 CineMood
@@ -39,7 +33,6 @@ const LandingPage = () => {
             </Text>
         </Box>
       </VStack>
-    </Box>
   );
 };
 

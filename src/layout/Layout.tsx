@@ -15,13 +15,21 @@ const Layout = () => {
       <Box position="relative" zIndex={2} minH="100vh" p={6} w="100%">
         <Header />
 
-        {loading ? (
-          <Loading />
-        ) : (
-          <Box flex="1" display="flex" justifyContent="center">
-            <Outlet />
-          </Box>
-        )}
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          minH="80vh"
+          p={6}
+        >
+          {loading ? (
+            <Loading />
+          ) : (
+            <Box flex="1" display="flex" justifyContent="center">
+              <Outlet />
+            </Box>
+          )}
+        </Box>
       </Box>
     </>
   );
