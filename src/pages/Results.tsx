@@ -24,10 +24,9 @@ const Results = () => {
   const { results } = useApp();
   const navigate = useNavigate();
 
-  // 🔒 Proteção de rota
   useEffect(() => {
     if (!results) {
-      navigate("/");
+      navigate("/search");
     }
   }, [results, navigate]);
 

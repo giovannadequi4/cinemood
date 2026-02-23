@@ -1,8 +1,10 @@
-# 🎬 CineMood — Recomendação de Filmes com IA
+# 🎬 CineMood
 
-Aplicação fullstack que utiliza **Google Gemini (plano gratuito)** para interpretar sentimentos e recomendar filmes, validando os resultados com dados da **TMDB API**.
+Durante as férias da faculdade, percebi que passava mais tempo escolhendo filmes do que assistindo. 
+Resolvi criar uma ferramenta que recomenda filmes com base no seu humor, usando IA e validação de dados reais.
 
-Deploy em produção via **Vercel (Serverless Functions)**.
+CineMood é uma aplicação fullstack que utiliza **Google Gemini (plano gratuito)** para interpretar sentimentos e recomendar filmes, validando os resultados com dados da **TMDB API**.  
+O deploy em produção é feito via **Vercel (Serverless Functions)**.
 
 ---
 

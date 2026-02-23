@@ -10,7 +10,7 @@ const Header = () => {
 
   const handleReset = () => {
     resetApp();
-    navigate("/");
+    navigate("/search");
   };
 
   return (
@@ -30,7 +30,7 @@ const Header = () => {
         cursor="pointer"
       >
         <Heading size="lg" color="teal.300">
-          Cine.me
+          CineMood
         </Heading>
 
         <Text fontSize="xs" opacity={0.6} fontWeight="bold">

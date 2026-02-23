@@ -6,8 +6,9 @@ import {
 
 import { AppProvider } from "../context/AppContext";
 import Layout from "../layout/Layout";
-import Home from "../pages/Home";
+import Search from "../pages/Search";
 import Results from "../pages/Results";
+import LandingPage from "../pages/LandingPage";
 
 export default function NavProvider() {
   return (
@@ -15,7 +16,8 @@ export default function NavProvider() {
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
+            <Route index element={<LandingPage />} /> 
+            <Route path="/search" element={<Search />} />
             <Route path="/results" element={<Results />} />
           </Route>
         </Routes>

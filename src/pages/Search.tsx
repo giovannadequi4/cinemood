@@ -3,7 +3,7 @@ import { useApp } from "../context/AppContext";
 import { buscarRecomendacoes } from '../services/movieService';
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const Search = () => {
   const navigate = useNavigate();
   const { mood, setMood, setResults, setLoading, setError } = useApp();
 
@@ -34,4 +34,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Search;
