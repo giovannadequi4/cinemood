@@ -1,6 +1,6 @@
 import { Box, Button, Heading, Text, VStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-v2.png";
 
 const LandingPage = () => {
   const navigate = useNavigate();
