@@ -34,7 +34,7 @@ const Results = () => {
 
   return (
     <VStack spacing={10} align="stretch" w="full" maxW="1200px" mx="auto">
-      <Box borderLeft="4px solid" borderColor="teal.300" pl={4}>
+      <Box borderLeft="4px solid" borderColor="brand.600" pl={4}>
         <Text fontSize="sm" opacity={0.6}>
           Análise baseada em:
         </Text>
@@ -51,21 +51,22 @@ const Results = () => {
         {results.filmes.map((filme, index) => (
           <Card
             key={filme.id}
-            bg="whiteAlpha.100"
-            backdropFilter="blur(10px)"
+            bg="rgba(255,255,255,0.03)"
+            backdropFilter="blur(14px)"
             border="1px solid"
-            borderColor="whiteAlpha.200"
+            borderColor="rgba(255,255,255,0.06)"
             borderRadius="2xl"
             transition="all 0.3s ease"
             _hover={{
               transform: "translateY(-6px)",
-              bg: "whiteAlpha.200"
+              borderColor: "brand.600",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
             }}
             animation={`${fadeIn} 0.6s ease-out`}
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <CardBody>
-              <Badge colorScheme="teal" mb={3}>
+              <Badge colorScheme="brand" mb={3}>
                 {filme.nota.toFixed(1)} ⭐
               </Badge>
 
@@ -84,11 +85,11 @@ const Results = () => {
 
               <Divider my={3} />
 
-              <Text fontSize="sm" opacity={0.85} mb={3}>
+              <Text fontSize="sm" opacity={0.75} mb={3}>
                 {filme.sinopse}
               </Text>
 
-              <Text fontSize="sm" opacity={0.7}>
+              <Text fontSize="sm" opacity={0.5}>
                 {filme.motivoRecomendacao}
               </Text>
             </CardBody>

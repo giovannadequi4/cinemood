@@ -10,7 +10,7 @@ const Header = () => {
 
   const handleReset = () => {
     resetApp();
-    navigate("/search");
+    navigate("/");
   };
 
   return (
@@ -29,7 +29,7 @@ const Header = () => {
         onClick={handleReset}
         cursor="pointer"
       >
-        <Heading size="lg" color="teal.300">
+        <Heading size="lg" color="brand.100">
           CineMood
         </Heading>
 
@@ -41,8 +41,7 @@ const Header = () => {
       {showReset && (
         <Button
           size="sm"
-          variant="ghost"
-          colorScheme="teal"
+          colorScheme="brand"
           onClick={handleReset}
         >
           Refazer Busca

@@ -20,8 +20,8 @@ const MoodInput = ({ mood, setMood, onSearch }: Props) => {
         <Box
           w="full"
           p={6}
-          bg="whiteAlpha.100"
-          backdropFilter="blur(20px)"
+          bg="rgba(255,255,255,0.03)"
+          backdropFilter="blur(12px)"
           borderRadius="2xl"
         >
         <Textarea
@@ -29,17 +29,20 @@ const MoodInput = ({ mood, setMood, onSearch }: Props) => {
           mb={4}
           value={mood}
           onChange={(e) => setMood(e.target.value)}
+          _focus={{
+            borderColor: "brand.300",
+            boxShadow: "0 0 0 1px var(--chakra-colors-brand-600)",
+          }}
         />
-
         <Stack direction="row" spacing={2} mb={6} flexWrap="wrap">
           {["Ansioso", "Indiferente", "Feliz", "Triste"].map((m) => (
-            <Button key={m} size="xs" variant="ghost" onClick={() => setMood(m)}>
+            <Button key={m} size="xs" onClick={() => setMood(m)} variant="ghost">
               {m}
             </Button>
           ))}
         </Stack>
 
-        <Button w="full" colorScheme="teal" onClick={onSearch}>
+        <Button w="full" colorScheme="brand" onClick={onSearch}>
           Encontrar meu filme
         </Button>
       </Box>
