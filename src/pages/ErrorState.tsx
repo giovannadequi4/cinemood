@@ -11,9 +11,8 @@ const ErrorState = () => {
     <Center py={40} flexDirection="column">
       <VStack spacing={6} textAlign="center">
         <Text fontSize="3xl" fontWeight="bold">
-          Sinto muito! Não conseguimos encontrar resultados.
+          Opa! Não conseguimos encontrar resultados.
         </Text>
-
 
         <Text opacity={0.6}>
           {error && ERROR_MESSAGES[error]}
@@ -23,7 +22,7 @@ const ErrorState = () => {
           <Button
             size="md"
             variant="ghost"
-            onClick={() => navigate("/search")}
+            onClick={() => {navigate("/search"); setError(null);}}
           >
             Voltar para pesquisa
           </Button>

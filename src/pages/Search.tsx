@@ -13,12 +13,34 @@ const Search = () => {
   const { mood, setMood, setResults, setLoading, setError } = useApp();
   const [inputError, setInputError] = useState<string | null>(null);
 
-  const handleBuscar = async () => {
-    if (!mood.trim()) {
+  const contarPalavras = (texto: string) => {
+    return texto
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean).length;
+  };
+
+  const validateInput = (text: string) => {
+    const palavras = contarPalavras(text);
+    if (!text.trim()) {
       setInputError("Digite algo antes de buscar.");
-      return;
+      return false;
     }
+
+    if (palavras < 3) {
+      setInputError(
+        "Descreva com pelo menos 3 palavras. Você pode incluir intensidade, gênero ou época do filme."
+      );
+      return false;
+    }
+
     setInputError(null);
+    return true;
+  };
+
+  const handleBuscar = async () => {
+    if (!validateInput(mood)) return;
+
     try {
       setLoading(true);
       setError(null);

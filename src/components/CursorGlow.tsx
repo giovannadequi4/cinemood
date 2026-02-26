@@ -56,7 +56,7 @@ const CursorGlow = () => {
       pointerEvents="none"
       zIndex={1}
       borderRadius="50%"
-      background="radial-gradient(circle, rgba(255,210,210,0.12), transparent 70%)"
+      background="radial-gradient(circle, rgba(255,210,210,0.15), transparent 70%)"
       filter="blur(20px)"
       opacity={0.6}
     />

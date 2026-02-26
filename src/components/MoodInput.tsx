@@ -7,6 +7,8 @@ import {
   FormControl,
   FormErrorMessage,
 } from "@chakra-ui/react";
+import { MOOD_MESSAGES } from "../constants/moodMessages";
+import { MoodType } from "../types/Mood";
 
 interface Props {
   mood: string;
@@ -40,22 +42,32 @@ const MoodInput = ({ mood, setMood, onSearch, error }: Props) => {
               boxShadow: "0 0 0 1px var(--chakra-colors-brand-600)",
             }}
           />
+          {!error && mood.trim() && mood.trim().split(/\s+/).length < 3 && (
+            <Box mt={2} fontSize="sm" opacity={0.6}>
+              Dica: inclua intensidade dos sentimentos, gênero ou até época de lançamento do filme :)
+            </Box>
+          )}
           {error && <FormErrorMessage>{error}</FormErrorMessage>}
         </FormControl>
 
         <Stack direction="row" spacing={2} mb={6} mt={4} flexWrap="wrap">
-          {["Ansioso", "Indiferente", "Feliz", "Triste"].map((m) => (
-            <Button
-              key={m}
-              size="xs"
-              onClick={() => setMood(m)}
-              variant="ghost"
-            >
-              {m}
-            </Button>
-          ))}
-        </Stack>
+          {(Object.keys(MOOD_MESSAGES) as MoodType[]).map((type) => {
+            const item = MOOD_MESSAGES[type];
 
+            return (
+              <Button
+                key={type}
+                size="xs"
+                variant="ghost"
+                onClick={() => 
+                  setMood(item.phrase)
+                }
+              >
+                {item.label}
+              </Button>
+            );
+          })}
+        </Stack>
         <Button w="full" colorScheme="brand" onClick={onSearch}>
           Encontrar meu filme
         </Button>
