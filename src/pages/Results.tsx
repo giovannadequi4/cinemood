@@ -82,6 +82,12 @@ const Results = () => {
                   alt={filme.titulo}
                   borderRadius="lg"
                   mb={4}
+                  boxShadow="0 20px 40px rgba(0,0,0,0.6)"
+                  filter="brightness(0.75)"
+                  transition="filter 0.8s ease"
+                  _hover={{
+                    filter: "brightness(0.85)"
+                  }}
                 />
               )}
 

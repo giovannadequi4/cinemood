@@ -13,10 +13,16 @@ const Background = () => {
       position="fixed"
       inset={0}
       zIndex={0}
-      background={`
-        radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.6)),
-        linear-gradient(-45deg, #140305, #1b0609, #26080d, #0f0203)
-      `}
+      background={{
+        base: `
+          radial-gradient(circle at center, transparent 65%, rgba(0,0,0,0.35)),
+          linear-gradient(-45deg, #140305, #1b0609, #26080d, #0f0203)
+        `,
+        md: `
+          radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.6)),
+          linear-gradient(-45deg, #140305, #1b0609, #26080d, #0f0203)
+        `
+      }}
       backgroundSize="300% 300%"
       animation={`${moveGradient} 30s ease infinite`}
       _after={{
