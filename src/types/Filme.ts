@@ -14,4 +14,8 @@ export interface Filme {
   motivoRecomendacao: string;
   recomendadoPelaIA: boolean;
   validado: boolean;
+
+  // TODO: trazer dados da API
+  duracao?: number;
+  generos?: string[];
 }

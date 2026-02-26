@@ -73,11 +73,16 @@ const MovieDetails = () => {
           <VStack align="stretch" spacing={6} flex="1">
 
             <Heading size="2xl">
-              {filme.titulo}
-            </Heading>
-            <Text fontSize="sm" opacity={0.6} mb={3}>
-              {filme.ano}
-            </Text>
+                {filme.titulo}{" "}
+                <Text
+                  as="span"
+                  fontSize="lg"
+                  opacity={0.6}
+                  fontWeight="normal"
+                >
+                  ({filme.ano})
+                </Text>
+              </Heading>
 
             <Badge
               alignSelf="flex-start"
