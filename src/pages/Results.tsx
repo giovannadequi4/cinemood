@@ -64,6 +64,8 @@ const Results = () => {
             }}
             animation={`${fadeIn} 0.6s ease-out`}
             style={{ animationDelay: `${index * 0.1}s` }}
+            onClick={() => navigate(`/movie/${filme.id}`)}
+            cursor="pointer"
           >
             <CardBody>
               <Badge colorScheme="brand" mb={3}>
@@ -84,10 +86,6 @@ const Results = () => {
               )}
 
               <Divider my={3} />
-
-              <Text fontSize="sm" opacity={0.75} mb={3}>
-                {filme.sinopse}
-              </Text>
 
               <Text fontSize="sm" opacity={0.5}>
                 {filme.motivoRecomendacao}

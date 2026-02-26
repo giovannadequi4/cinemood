@@ -1,5 +1,5 @@
-import { ResultadoRecomendacao } from "../interfaces/ResultadoRecomendacao";
-import { Filme } from "../interfaces/Filme";
+import { ResultadoRecomendacao } from "../types/ResultadoRecomendacao";
+import { Filme } from "../types/Filme";
 
 export function buscarRecomendacoes(textoSentimento: string): Promise<ResultadoRecomendacao>;
 

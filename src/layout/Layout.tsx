@@ -2,14 +2,16 @@ import { Box } from "@chakra-ui/react";
 import { Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import Background from "../components/Background";
+import CursorGlow from "../components/CursorGlow";
 import Header from "../components/Header";
 import { useApp } from "../context/AppContext";
 import Loading from "../pages/Loading";
+import ErrorState from "../pages/ErrorState";
 
 const MotionBox = motion(Box);
 
 const Layout = () => {
-  const { loading } = useApp();
+  const { loading, error } = useApp();
   const location = useLocation();
 
   const pageVariants = {
@@ -21,6 +23,7 @@ const Layout = () => {
   return (
     <>
       <Background />
+      <CursorGlow />
 
       <Box position="relative" zIndex={2} minH="100vh" p={6} w="100%">
         <Header />
@@ -35,9 +38,11 @@ const Layout = () => {
         >
           {loading ? (
             <Loading />
+          ) : error ? (
+            <ErrorState />
           ) : (
             <MotionBox
-              key={location.pathname} 
+              key={location.pathname}
               initial="initial"
               animate="animate"
               exit="exit"

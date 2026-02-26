@@ -9,6 +9,7 @@ import Layout from "../layout/Layout";
 import Search from "../pages/Search";
 import Results from "../pages/Results";
 import LandingPage from "../pages/LandingPage";
+import MovieDetails from "../pages/MovieDetails";
 
 export default function NavProvider() {
   return (
@@ -19,6 +20,7 @@ export default function NavProvider() {
             <Route index element={<LandingPage />} /> 
             <Route path="/search" element={<Search />} />
             <Route path="/results" element={<Results />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
           </Route>
         </Routes>
       </BrowserRouter>

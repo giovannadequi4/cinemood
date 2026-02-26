@@ -1,29 +1,16 @@
 import { createContext, useContext, useState } from "react";
-import { ResultadoRecomendacao } from "../interfaces/ResultadoRecomendacao";
-
-interface AppContextType {
-  mood: string;
-  setMood: (value: string) => void;
-
-  results: ResultadoRecomendacao | null;
-  setResults: (value: ResultadoRecomendacao | null) => void;
-
-  loading: boolean;
-  setLoading: (value: boolean) => void;
-
-  error: string | null;
-  setError: (value: string | null) => void;
-
-  resetApp: () => void;
-}
+import { ResultadoRecomendacao } from "../types/ResultadoRecomendacao";
+import { AppErrorType } from "../types/Error";
+import { AppContextType } from "../types/AppContext";
 
 const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+
+  const [error, setError] = useState<AppErrorType | null>(null);
   const [mood, setMood] = useState("");
   const [results, setResults] = useState<ResultadoRecomendacao | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const resetApp = () => {
     setMood("");
