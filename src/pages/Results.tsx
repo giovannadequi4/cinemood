@@ -73,7 +73,10 @@ const Results = () => {
               </Badge>
 
               <Heading size="md" mb={3}>
-                {filme.titulo}
+                {filme.titulo}{" "}
+                <Text as="span" fontSize="sm" opacity={0.6} fontWeight="normal">
+                  ({filme.ano})
+                </Text>
               </Heading>
 
               {filme.poster && (

@@ -75,6 +75,9 @@ const MovieDetails = () => {
             <Heading size="2xl">
               {filme.titulo}
             </Heading>
+            <Text fontSize="sm" opacity={0.6} mb={3}>
+              {filme.ano}
+            </Text>
 
             <Badge
               alignSelf="flex-start"
