@@ -15,11 +15,11 @@ const Background = () => {
       zIndex={0}
       background={{
         base: `
-          radial-gradient(circle at center, transparent 65%, rgba(0,0,0,0.35)),
+          radial-gradient(circle at center, transparent 65%, rgba(20,3,5,0.35)),
           linear-gradient(-45deg, #140305, #1b0609, #26080d, #0f0203)
         `,
         md: `
-          radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.6)),
+          radial-gradient(circle at center, transparent 60%, rgba(20,3,5,0.6)),
           linear-gradient(-45deg, #140305, #1b0609, #26080d, #0f0203)
         `
       }}
