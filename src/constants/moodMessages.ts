@@ -7,21 +7,21 @@ export const MOOD_MESSAGES: Record<
   [MoodType.ANXIOUS]: {
     label: "Ansioso",
     phrase:
-      "Estou me sentindo ansioso e quero um filme intenso, envolvente e que prenda minha atenção.",
+      "Estou um pouco ansioso e quero um filme intenso.",
   },
   [MoodType.INDIFFERENT]: {
     label: "Indiferente",
     phrase:
-      "Estou me sentindo indiferente e quero algo surpreendente que me tire da zona de conforto.",
+      "Me sinto indiferente e quero algo que me tire da zona de conforto.",
   },
   [MoodType.HAPPY]: {
-    label: "Feliz",
+    label: "Tranquilo",
     phrase:
-      "Estou me sentindo feliz e quero um filme leve, divertido e com boa energia.",
+      "Estou tranquilo e quero um filme leve e com boa energia.",
   },
   [MoodType.SAD]: {
     label: "Triste",
     phrase:
-      "Estou me sentindo triste e quero algo emocionante ou reconfortante.",
+      "Estou um pouco triste e quero algo reconfortante.",
   },
 };
